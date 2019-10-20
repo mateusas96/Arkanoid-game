@@ -39,7 +39,6 @@ public class Gameboard {
         
         
         gameboard.add(eng);
-        eng.grabFocus(); //for key listener to work
     }
     
     public void draw(Graphics g){

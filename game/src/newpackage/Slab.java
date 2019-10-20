@@ -8,9 +8,6 @@ package newpackage;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 
 /**
  *
@@ -25,8 +22,6 @@ public class Slab extends Gameboard{
     private final int slabLeftX = 15, slabLeftY = 630;
     private int slabWidth=screen/(rows*2),slabHeight=screen/(rows*4);
     
-//    private ArrayList<Integer>[][] slabsArray = new ArrayList[rows][rows];
-//    private ArrayList<Integer> number = new ArrayList<>();
     
     private int[][] slabArray = new int[rows][rows];
 

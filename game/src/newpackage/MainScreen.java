@@ -20,7 +20,7 @@ public class MainScreen{
     private final int buttonY=60,buttonWidth=130,buttonHeight=30,buttonNormalX=25,buttonHardX=185;
     private final int textX=120,textY=20,textWidth=100,textHeight=20;
 
-    public void Screen(){
+    public void makeScreen(){
         
         Gameboard gb = new Gameboard();
         
@@ -58,7 +58,7 @@ public class MainScreen{
         public void actionPerformed(ActionEvent e) { 
             mainScrn.setVisible(false);
             gb.setDifficulty(difficultyEasy);
-            gb.gameBoard();
+            gb.makeGameboard();
         }
         });
         
@@ -67,7 +67,7 @@ public class MainScreen{
         public void actionPerformed(ActionEvent e) { 
             mainScrn.setVisible(false);
             gb.setDifficulty(difficultyHard);
-            gb.gameBoard();
+            gb.makeGameboard();
         }
         });
     }

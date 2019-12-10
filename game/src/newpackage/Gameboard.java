@@ -9,7 +9,6 @@ package newpackage;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 /**
  *
@@ -23,7 +22,7 @@ public class Gameboard {
     private int difficulty;
     private JFrame gameboard;
     
-    public void gameBoard(){
+    public void makeGameboard(){
         gameboard = new JFrame();
         
         gameboard.setTitle("Arkanoid game");

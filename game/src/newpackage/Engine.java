@@ -6,7 +6,6 @@
 package newpackage;
 
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -21,32 +20,28 @@ public class Engine extends JPanel implements MouseMotionListener, Runnable{
     
     private final int rectangleY = 650, rectangleHeight=10;
     private int rectangleWidth;
-    private final int screenX=0,screenY=screenX,screenWidth=700,screenHeight=screenWidth, screenRightSideX=680;
+    private final int screenX=0,screenY=0,screenWidth=700,screenHeight=700;
     
     private final int ballWidth=15, ballHeight=15;
-    private int ballPosX=350, ballPosY=500;
-    private int slabsAmount = 64;
     private int rectanglePlayerPosX = 300;
     private final int increaseScore = 10;
     private final int decreaseSlabs = 1;
+    private boolean play=false;
 
     BallEngine ballEng = new BallEngine();
-    TryAgain again = new TryAgain();
+    TryAgainScreen again = new TryAgainScreen();
     Gameboard gb = new Gameboard();
-    Gameboard gs = new Slab();
+    Gameboard gs = new Slabs();
+    Slabs slab = new Slabs();
+    
     Rectangle ball;
     Rectangle rectangle;
     Rectangle slabs;
-    Slab slab = new Slab();
-    boolean play=false;
+    
     Thread newThread;
-    
 
-    
     public Engine(){
-        addMouseMotionListener((MouseMotionListener)this);
-        ballEng.ballSpeedX=1;
-        ballEng.ballSpeedY=1;
+        addMouseMotionListener(this);
         this.play = true;
         this.newThread = new Thread(this);
         this.newThread.start();
@@ -70,7 +65,7 @@ public class Engine extends JPanel implements MouseMotionListener, Runnable{
         
         //ball
         ui.setColor(Color.white);
-        ui.fillOval(ballPosX, ballPosY, ballWidth, ballHeight);
+        ui.fillOval(ballEng.getPositionX(), ballEng.getPositionY(), ballWidth, ballHeight);
         
         //score
         gb.draw(ui);
@@ -79,7 +74,7 @@ public class Engine extends JPanel implements MouseMotionListener, Runnable{
         gs.draw(ui);
         
         //slab
-        slab.drawSlabs(ui);;
+        slab.makeSlabsRow(ui);
         
     }
     
@@ -93,31 +88,23 @@ public class Engine extends JPanel implements MouseMotionListener, Runnable{
     @Override
     public void run() {
         while(play){
-            ball = new Rectangle(ballPosX, ballPosY, ballWidth, ballHeight);
+            ball = new Rectangle(ballEng.getPositionX(), ballEng.getPositionY(), ballWidth, ballHeight);
             rectangle = new Rectangle(rectanglePlayerPosX, rectangleY, rectangleWidth, rectangleHeight);
    
             try{
-                if(ballPosX<=(screenWidth-screenWidth) || ballPosX>=screenRightSideX){
-                    ballEng.ballSpeedX=-ballEng.ballSpeedX;
-                }else if(ballPosY<=(screenHeight-screenHeight)){
-                    ballEng.ballSpeedY=-ballEng.ballSpeedY;
-                }else if(ballPosY>=(screenHeight-ballWidth)){
-                    play=false;
-                }
-
-                if(ball.intersects(rectangle)){
-                    ballEng.ballSpeedY=-ballEng.ballSpeedY;  
-                }
-
-                setBallPosY(ballEng.moveBallY(getBallPosY()));
-                setBallPosX(ballEng.moveBallX(getBallPosX()));
+                play=ballEng.checkIfBallIsInGame(ballEng.getPositionX(),ballEng.getPositionY(),screenWidth, screenHeight,ballWidth);
                 
-                if(slab.ifIntersects(getBallPosX(), getBallPosY(), ballWidth, ballHeight)){
-                    ballEng.ballSpeedY=-ballEng.ballSpeedY;
-                    slabsAmount--;
+                if(ball.intersects(rectangle)){
+                    ballEng.ballSpeedAndDirectionY=-ballEng.ballSpeedAndDirectionY;  
+                }
+                
+                ballEng.move(ballEng.getPositionX(),ballEng.getPositionY());
+                
+                if(slab.intersects(ballEng.getPositionX(), ballEng.getPositionY(), ballWidth, ballHeight)){
+                    ballEng.ballSpeedAndDirectionY=-ballEng.ballSpeedAndDirectionY;
                     slab.setSlabsLeft(slab.getSlabsLeft()-decreaseSlabs);
                     gb.setScore(gb.getScore()+increaseScore);
-                    checkSlabAmount(slabsAmount);
+                    play = slab.checkIfSlabsLeft(slab.getSlabsLeft());
                 }
                 
                 
@@ -128,34 +115,15 @@ public class Engine extends JPanel implements MouseMotionListener, Runnable{
             }
             repaint();
         }
-        again.again(gb.getScore()); 
-    }
-
-    public void checkSlabAmount(int slabAmount){
-        if(slabAmount==0){
-            play=false;
-        }
-    }
-    
-    public void setBallPosX(int ballPosX) {
-        this.ballPosX = ballPosX;
-    }
-
-    public void setBallPosY(int ballPosY) {
-        this.ballPosY = ballPosY;
-    }
-
-    public int getBallPosX() {
-        return ballPosX;
-    }
-
-    public int getBallPosY() {
-        return ballPosY;
+        again.playAgain(gb.getScore());
+        int restartedSlabsAmount = slab.restartSlabsAmount();
+        slab.setSlabsLeft(restartedSlabsAmount);
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
 
     }
+
 }
 

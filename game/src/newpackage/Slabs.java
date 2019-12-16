@@ -41,6 +41,7 @@ public class Slabs extends Gameboard{
         }
     }
     
+    @Override
     public void draw(Graphics g){
         g.setColor(Color.ORANGE);
         g.drawString("Slabs left: "+slabsLeft, slabsLeftPositionX, slabsLeftPositionY);

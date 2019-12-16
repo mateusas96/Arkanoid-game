@@ -12,14 +12,14 @@ import newpackage.*;
  *
  * @author Matas
  */
-public class Main {
+public class Main extends MainScreen{
     
     /**
      * @param args the command line arguments
      */
     
     public static void main(String[] args) {
-        MainScreen screen = new MainScreen();
-        screen.makeScreen();
+        Main begining = new Main();
+        begining.makeScreen();
     }
 }
